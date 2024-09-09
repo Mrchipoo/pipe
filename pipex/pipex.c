@@ -3,8 +3,7 @@
 
 int check_access(char *PATH)
 {
-    printf("%s\n",PATH);
-    if (access(PATH + 5, F_OK) == 0)
+    if (access(PATH, F_OK) == 0)
     {
         if (access(PATH, X_OK) == 0)
             return (0);
@@ -32,15 +31,16 @@ char    *find_path(char **env, char *cmd)
     while (path[i])
     {
         PATH = ft_strjoin(path[i],cmd);
-        if ((check = check_access(PATH)) == 0)
+        check = check_access(PATH);
+        if (check == 0)
             return (PATH);
-        else if (check == 1)
-            return (dprintf(2, "command not found\n"), NULL);
-        else
-            return (dprintf(2, "permission denied\n"), NULL);
         i++;
     }
-    return ("s");
+    if (check == 1)
+        return (dprintf(2, "command not found\n"), NULL);
+    else if (check == 2)
+        return (dprintf(2, "command not found\n"), NULL);
+    return (NULL);
 }
 
 int main (int argc, char **argv, char **env)
