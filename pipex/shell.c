@@ -75,6 +75,16 @@ int main (int argc, char **argv, char **env)
             redirect_input(argv[3], args1,env);
         }
     }
+    else if(argc == 2)
+    {
+        if (check_if_builts(argv) == 0)
+            run_builts(argv, argc);
+        else
+        {
+            args1 = ft_split(argv[1], ' ');
+            run_normal(args1, env);
+        }
+    }
     else
         printf("invalid arg\n");
     return (0);

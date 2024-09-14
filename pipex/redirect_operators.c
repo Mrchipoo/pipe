@@ -18,7 +18,7 @@ char    *redirect_input(char *infile, char **args, char **env)
     else if (pid == 0)
     {
         fd = open(infile, O_RDONLY);
-        dup2(fd, 0);//output of cmd to outfile fd
+        dup2(fd, 0);//input of file to stdin
         close (fd);
         execve(cmd, args, NULL);
     } 

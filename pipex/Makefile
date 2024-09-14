@@ -2,7 +2,7 @@ NAME =pipex
 CC =cc
 GFLAGS =-Wall -Wextra -Werror -g3
 HEADER =pipex.h
-SRC =shell.c split.c string_utils.c pipe.c redirect_operators.c
+SRC =shell.c split.c string_utils.c pipe.c redirect_operators.c normal_cmd.c builtins.c
 OBJECT = $(SRC:.c=.o)
 
 all: $(NAME)
