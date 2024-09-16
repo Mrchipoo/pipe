@@ -21,5 +21,7 @@ char    *redirect_output_append(char *outfile, char **args, char **env);
 char    *redirect_input(char *outfile, char **args, char **env);
 int     check_if_builts(char **argv);
 int     check_access(char *PATH);
+int	get_next_line(char **line);
+char    *her_doc(char *Delimit, char **args, char **env);
 
 #endif

@@ -77,3 +77,59 @@ char    *redirect_output_append(char *outfile, char **args, char **env)
     wait(&status);
     return ("succes");  
 }
+
+char    *her_doc(char *Delimit, char **args, char **env)
+{
+    int pid;
+    int fd[2];
+    int status;
+    char    *cmd;
+    char    *line;
+
+    if ((pipe(fd)) == -1)
+    {
+        printf("error with pipe\n");
+        return (NULL);
+    }
+    if ((pid = fork()) == -1)
+    {
+        printf("error with fork\n");
+        return (NULL);
+    }
+    else if (pid == 0)
+    {
+        close(fd[1]);
+        while (get_next_line(&line))
+        {
+            if (strcmp(line, Delimit) == 0)
+            {
+                exit(EXIT_SUCCESS);
+            }
+            write(fd[0], &line, strlen(line));
+        }
+    }
+    else
+    {
+        cmd = find_path(env, args[0]);
+        if (cmd == NULL)
+            return (NULL);
+        if ((pid = fork()) == -1)
+        {
+            printf("error with fork\n");
+            return (NULL);
+        }
+        else if (pid == 0)
+        {
+            close(fd[1]);
+            dup2(fd[0], 0);
+            close(fd[0]);
+            execve(cmd, args, NULL);
+        }
+        close(fd[1]);
+        close(fd[0]);
+        wait(&status);
+        wait(&status);
+        dup2(fd[0], STDIN_FILENO);
+    }
+    return ("succes");
+}

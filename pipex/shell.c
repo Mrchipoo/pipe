@@ -74,6 +74,11 @@ int main (int argc, char **argv, char **env)
             args1 = ft_split(argv[1], ' ');
             redirect_input(argv[3], args1,env);
         }
+        else if (strcmp(argv[2] , "<<") == 0)
+        {
+            args1 = ft_split(argv[1], ' ');
+            her_doc(argv[3], args1, env);
+        }
     }
     else if(argc == 2)
     {
