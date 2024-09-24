@@ -19,5 +19,6 @@ char    *run_normal(char **args, char **env)
         execve(cmd, args, NULL);
     else
         wait(&status);
+    free(cmd);
     return ("succes");
 }

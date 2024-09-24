@@ -1,23 +1,5 @@
 #include "pipex.h"
 
-size_t	ft_strlen(const char *str, int mode)
-{
-	size_t	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	if (mode == 1)
-	{
-		while (*str != '\0')
-		{
-			i++;
-			str++;
-		}
-	}
-	return (i);
-}
-
 char	*ft_strnstr(const char	*big, const char *little, size_t len)
 {
 	size_t	i;
@@ -49,7 +31,7 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	len = ft_strlen(s1, 1) + ft_strlen(s2, 1);
+	len = ft_strlen(s1) + ft_strlen(s2);
 	b = malloc((len + 1) * sizeof(char));
 	if (b == NULL)
 		return (NULL);
@@ -64,29 +46,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (b);
 }
 
-int	get_next_line(char **line)
+size_t	ft_strlen(char *str)
 {
-	char	*buffer;
-	int		i;
-	int		r;
-	char	c;
+	size_t	i;
 
 	i = 0;
-	r = 0;
-	buffer = (char *)malloc(10000);
-	if (!buffer)
-		return (-1);
-	r = read(0, &c, 1);
-	while (r && c != '\n' && c != '\0')
-	{
-		if (c != '\n' && c != '\0')
-			buffer[i] = c;
+	while (str[i])
 		i++;
-		r = read(0, &c, 1);
-	}
-	buffer[i] = '\n';
-	buffer[++i] = '\0';
-	*line = buffer;
-	free(buffer);
-	return (r);
+	return (i);
 }

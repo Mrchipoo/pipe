@@ -18,7 +18,7 @@ char    *redirect_input(char *infile, char **args, char **env)
     else if (pid == 0)
     {
         fd = open(infile, O_RDONLY);
-        dup2(fd, 0);//input of file to stdin
+        dup2(fd, 0);//input of file to stdin    
         close (fd);
         execve(cmd, args, NULL);
     } 
@@ -86,6 +86,7 @@ char    *her_doc(char *Delimit, char **args, char **env)
     char    *cmd;
     char    *line;
 
+    line = NULL;
     if ((pipe(fd)) == -1)
     {
         printf("error with pipe\n");
@@ -98,18 +99,19 @@ char    *her_doc(char *Delimit, char **args, char **env)
     }
     else if (pid == 0)
     {
-        close(fd[1]);
-        while (get_next_line(&line))
+        close(fd[0]);
+        while (1)
         {
+            line = readline("heredoc> ");
             if (strcmp(line, Delimit) == 0)
-            {
                 exit(EXIT_SUCCESS);
-            }
-            write(fd[0], &line, strlen(line));
+            write(fd[1], line, ft_strlen(line));
+            write(fd[1], "\n", 1);
         }
     }
     else
     {
+        wait(&status);
         cmd = find_path(env, args[0]);
         if (cmd == NULL)
             return (NULL);
@@ -128,8 +130,6 @@ char    *her_doc(char *Delimit, char **args, char **env)
         close(fd[1]);
         close(fd[0]);
         wait(&status);
-        wait(&status);
-        dup2(fd[0], STDIN_FILENO);
     }
     return ("succes");
 }

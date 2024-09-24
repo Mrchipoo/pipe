@@ -26,7 +26,6 @@ int	echo_check(char **argv, int argc)
 	}
 	return (i);
 }
-
 char    *ft_echo(char **argv , int argc)
 {
     int i;
@@ -67,13 +66,42 @@ int    check_if_builts(char **argv)
         return (0);
     else if (strcmp(argv[1], "pwd") == 0)
         return (0);
+	else if (strcmp(argv[1], "env") == 0)
+		return (0);
     return (1);
 }
 
-void    run_builts(char **argv, int argc)
+char	*ft_env(char **env)
+{
+	int	i;
+
+	i = 0;
+	while(env[i])
+	{
+		printf("%s\n",env[i]);
+		i++;
+	}
+	return ("succes");
+}
+
+void    run_builts(char **argv, int argc, char **env)
 {
     if (strcmp(argv[1], "echo") == 0)
         ft_echo(argv, argc);
     else if (strcmp(argv[1], "pwd") == 0)
         ft_pwd();
+	else if (strcmp(argv[1], "env") == 0)
+		ft_env(env);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	if (argc > 1)
+	{
+		if (check_if_builts(argv) == 0)
+            run_builts(argv, argc, env);
+	}
+	else
+		printf("invalid arg\n");
+	return (0);
 }

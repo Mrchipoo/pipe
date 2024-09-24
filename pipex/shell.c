@@ -1,6 +1,5 @@
 #include "pipex.h"
 
-
 int check_access(char *PATH)
 {
     if (access(PATH, F_OK) == 0)
@@ -11,31 +10,37 @@ int check_access(char *PATH)
             return (2);
     }
     else
-        return (1);      
+        return (1);
 }
 
 char    *find_path(char **env, char *cmd)
 {
-    char    **path;
-    char    *PATH;
-    int i;
-    int check;
+	char	**path;
+	char	*big_path;
+	int	i;
+	int	check;
 
-    i = 0;
-    check = 0;
-    while ((PATH = ft_strnstr(env[i], "PATH", 4)) == NULL)
-        i++;
-    path = ft_split(PATH, ':');
-    i  = 0;
-    cmd = ft_strjoin("/", cmd); 
-    while (path[i])
-    {
-        PATH = ft_strjoin(path[i],cmd);
-        check = check_access(PATH);
+	i =	0;
+	check = 0;
+	while ((big_path = ft_strnstr(env[i], "PATH", 4)) == NULL)
+		i++;
+	path = ft_split(big_path, ':');
+	i  = 0;
+	cmd = ft_strjoin("/", cmd);
+	while (path[i])
+	{
+        big_path = ft_strjoin(path[i],cmd);
+        check = check_access(big_path);
         if (check == 0)
-            return (PATH);
+        {
+            free(cmd);
+            return (big_path);
+        }
         i++;
     }
+    free(cmd);
+    free(*path);
+    free(path);
     if (check == 1)
         return (dprintf(2, "command not found\n"), NULL);
     else if (check == 2)
@@ -63,21 +68,25 @@ int main (int argc, char **argv, char **env)
         {
             args1 = ft_split(argv[1], ' ');
             redirect_output(argv[3], args1,env);
+            free(args1);
         }
         else if (strcmp(argv[2], ">>") == 0)
         {
             args1 = ft_split(argv[1], ' ');
             redirect_output_append(argv[3], args1,env);
+            free(args1);
         }
         else if (strcmp(argv[2], "<") == 0)
         {
             args1 = ft_split(argv[1], ' ');
             redirect_input(argv[3], args1,env);
+            free(args1);
         }
         else if (strcmp(argv[2] , "<<") == 0)
         {
             args1 = ft_split(argv[1], ' ');
             her_doc(argv[3], args1, env);
+            free(args1);
         }
     }
     else if(argc == 2)
@@ -88,6 +97,8 @@ int main (int argc, char **argv, char **env)
         {
             args1 = ft_split(argv[1], ' ');
             run_normal(args1, env);
+            free(*args1);
+            free(args1);
         }
     }
     else
