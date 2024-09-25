@@ -98,24 +98,6 @@ void	add_new_var(char *str, t_env_list *list)
 	ft_last_node(current)->next = new_node;//add new var to env linked list
 }
 
-char	*ft_export(t_env_list *list, char **argv)
-{
-	int j;
-
-	j = 2;
-	if (argv[j] == NULL)// no args mean print
-	{
-		//print_export();
-		return (NULL);
-	}
-	while (argv[j])
-	{
-		add_new_var(argv[j], list);
-		j++;
-	}
-	return (NULL);
-}
-
 int	echo_check(char **argv, int argc)
 {
 	int	i;
@@ -141,6 +123,24 @@ int	echo_check(char **argv, int argc)
 		i++;
 	}
 	return (i);
+}
+
+char	*ft_export(t_env_list *list, char **argv)
+{
+	int j;
+
+	j = 2;
+	if (argv[j] == NULL)// no args mean print
+	{
+		//print_export();
+		return (NULL);
+	}
+	while (argv[j])
+	{
+		add_new_var(argv[j], list);
+		j++;
+	}
+	return (NULL);
 }
 
 char    *ft_echo(char **argv , int argc)
