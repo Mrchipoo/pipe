@@ -23,6 +23,38 @@ typedef struct s_env_list
 struct s_env_list    *next;
 } t_env_list;
 
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strnstr(const char	*big, const char *little, int len)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	if (little[i] == '\0')
+		return ((char *)big);
+	while (big[i] && i < len)
+	{
+		j = 0;
+		while (big[i + j] == little[j] && i + j < len)
+		{
+			if (little[j + 1] == '\0')
+				return ((char *)big + i);
+			j++;
+		}
+		i++;
+	}
+	return (NULL);
+}
+
 int	check_value(char *str)
 {
 	int	i;
@@ -125,6 +157,7 @@ int	echo_check(char **argv, int argc)
 	return (i);
 }
 
+
 char	*ft_export(t_env_list *list, char **argv)
 {
 	int j;
@@ -191,6 +224,29 @@ char	*ft_env(t_env_list *list)
 	return ("succes");
 }
 
+char	*ft_unset(char **argv, t_env_list *list)
+{
+	t_env_list *new_node;
+	t_env_list	*prev;
+	int	j;
+	char	**splited;
+
+	j = 2;
+	while (argv[j])
+	{
+		new_node = list;
+		splited = ft_split(argv[j]);
+		while ((ft_strnstr(new_node->name, splited[0], ft_strlen(splited[0]))) == NULL)
+		{
+			prev = new_node;
+        	new_node = new_node->next;
+		}
+		prev->next = new_node->next;
+		j++;
+	}
+	return(NULL);
+}
+
 int    check_if_builts(char **argv)
 {
     if (strcmp(argv[1], "echo") == 0)
@@ -217,7 +273,7 @@ void    run_builts(char **argv, int argc, t_env_list *list)
 	else if (strcmp(argv[1], "export") == 0)
 		ft_export(list, argv);
 	else if (strcmp(argv[1], "unset") == 0)//to do
-		return (0);
+		ft_unset(argv, list);
 }
 
 int	main(int argc, char **argv, char **env)
